@@ -1,55 +1,65 @@
 ﻿using GoneSoon.Models;
 using GoneSoon.Repositories;
-using StackExchange.Redis;
 using System.Text.Json;
 
 namespace GoneSoon.Infrastructure
 {
     public class RedisNoteRepository : INoteRepository
     {
-        private readonly IDatabase _database;
+        private readonly IRedisStorageService _storageService;
         private const string NotePrefix = "note:";
 
-        public RedisNoteRepository(IConnectionMultiplexer redis)
+        public RedisNoteRepository(IRedisStorageService storageService)
         {
-            _database = redis.GetDatabase();
+            _storageService = storageService;
         }
 
         public async Task<Note> CreateNewNote(Note note)
         {
-            var key = $"{NotePrefix}{note.Id}";
-            var value = JsonSerializer.Serialize(note);
+            string key = GetKey(note);
             var expiry = note.ExpireDate - DateTime.UtcNow;
+            var json = JsonSerializer.Serialize(note);
 
-            await _database.StringSetAsync(key, value, expiry);
+            await _storageService.SetAsync(key, json, expiry);
+
             return note;
         }
 
-        public async Task<Note> GetNote(Guid noteId)
+        public async Task<Note> GetNote(Guid id)
         {
-            var key = $"{NotePrefix}{noteId}";
-            var value = await _database.StringGetAsync(key);
+            string key = GetKey(id);
+            var json = await _storageService.GetAsync(key);
+            return json != null ? JsonSerializer.Deserialize<Note>(json) : default;
+        }
 
-                return value.HasValue ? JsonSerializer.Deserialize<Note>(value!) : null;
+        public async Task DeleteNoteAsync(Guid id)
+        {
+            await _storageService.DeleteAsync(id.ToString());
         }
 
         public async Task UpdateNote(Note note)
         {
-            var key = $"{NotePrefix}{note.Id}";
-            if (!await _database.KeyExistsAsync(key))
-            {
-                throw new ArgumentException("Note does not exist or was deleted.");
-            }
-
+            var key = GetKey(note);
             var value = JsonSerializer.Serialize(note);
             var expiry = note.ExpireDate - DateTime.UtcNow;
-            await _database.StringSetAsync(key, value, expiry);
+
+            await _storageService.SetAsync(key, value, expiry);
         }
 
-        public async Task DeleteNote(Guid noteId)
+        public async Task DeleteNote(Guid id)
         {
-            var key = $"{NotePrefix}{noteId}";
-            await _database.KeyDeleteAsync(key);
+            var key = GetKey(id);
+            await _storageService.DeleteAsync(key);
+        }
+
+        private static string GetKey(Note note)
+        {
+            return GetKey(note.Id);
+        }
+
+        private static string GetKey(Guid noteId)
+        {
+            return $"{NotePrefix}{noteId}";
         }
     }
 }

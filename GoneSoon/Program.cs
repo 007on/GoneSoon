@@ -34,6 +34,7 @@ internal class Program
             options.Configuration = configurationSection.Value;
         });
         
+        builder.Services.AddScoped<IRedisStorageService, RedisStorageService>();
         builder.Services.AddScoped<INoteRepository, RedisNoteRepository>();
         builder.Services.AddScoped<IUserRepository, UserRepository>();
         builder.Services.AddScoped<INotificationMethodRepository, NotificationMethodRepository>();
