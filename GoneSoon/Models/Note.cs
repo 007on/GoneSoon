@@ -63,6 +63,11 @@ namespace GoneSoon.Models
                 throw new ArgumentException("Content is required");
             }
 
+            if (string.IsNullOrWhiteSpace(note.Title))
+            {
+                throw new ArgumentException("Title is required");
+            }
+
             if (note.DeletingDate < DateTime.UtcNow)
             {
                 throw new ArgumentException("Expire date must be in the future");
@@ -74,6 +79,11 @@ namespace GoneSoon.Models
             if (string.IsNullOrEmpty(note.Content))
             {
                 throw new ArgumentException("Content is required");
+            }
+
+            if (string.IsNullOrWhiteSpace(note.Title))
+            {
+                throw new ArgumentException("Title is required");
             }
 
             if (note.ExpireDate < DateTime.UtcNow)

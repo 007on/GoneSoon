@@ -2,7 +2,7 @@
 
 namespace GoneSoon.Infrastructure
 {
-    internal static class RedisNoteRepositoryHelpers
+    public static class RedisNoteRepositoryHelpers
     {
         private const string NotePrefix = "note:";
         private const string MetadataPrefix = "metadata:";

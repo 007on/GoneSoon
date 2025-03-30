@@ -1,5 +1,6 @@
 ﻿using GoneSoon.Infrastructure;
 using GoneSoon.Infrastructure.GoneSoon.Data;
+using GoneSoon.NotificationStrategies;
 using GoneSoon.Repositories;
 using GoneSoon.Services;
 using Microsoft.EntityFrameworkCore;
@@ -33,7 +34,9 @@ internal class Program
             IConfigurationSection configurationSection = builder.Configuration.GetSection("Redis:ConnectionString");
             options.Configuration = configurationSection.Value;
         });
-        
+
+        builder.Services.AddSingleton<INotificationStrategyFactory, NotificationStrategyFactory>();
+
         builder.Services.AddScoped<IRedisStorageService, RedisStorageService>();
         builder.Services.AddScoped<INoteRepository, RedisNoteRepository>();
         builder.Services.AddScoped<IUserRepository, UserRepository>();
@@ -42,6 +45,8 @@ internal class Program
         builder.Services.AddScoped<IUserService, UserService>();
         builder.Services.AddScoped<INotificationMethodService, NotificationMethodService>();
         builder.Services.AddScoped<INoteManager, NoteManager>();
+        builder.Services.AddScoped<RedisKeyExpirationWatcher>();
+        //builder.Services.AddMediatR();
 
         var app = builder.Build();
 
