@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  gone-soon-api:
+    image: gone-soon-api
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - redis
+      - sqlserver
+    environment:
+      - ConnectionStrings__Redis=redis:6379
+      - ConnectionStrings__SqlServer=Server=sqlserver;Database=GoneSoonDb;User=sa;Password=YourStrong!Passw0rd;
+    ports:
+      - "5000:5000"
+      - "5001:5001"
+    restart: unless-stopped
+
+  redis:
+    image: redis:latest
+    restart: always
+    command: ["redis-server", "--notify-keyspace-events", "Ex"]
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    restart: always
+    environment:
+      - REDIS_HOSTS=local:redis:6379
+    ports:
+      - "8081:8081"
+
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    restart: always
+    environment:
+      SA_PASSWORD: "YourStrong!Passw0rd"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+
+volumes:
+  redis_data:
+  sqlserver_data:
