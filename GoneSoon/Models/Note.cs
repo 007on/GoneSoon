@@ -1,5 +1,4 @@
-﻿using GoneSoon.Services;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace GoneSoon.Models
 {
