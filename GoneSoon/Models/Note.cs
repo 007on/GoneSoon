@@ -11,11 +11,19 @@ namespace GoneSoon.Models
         public DateTime ExpireDate { get; set; }
         public DateTime CreatedDate { get; set; }
         public ICollection<NotificationMethod> NotificationMethodTypes { get; set; } = new HashSet<NotificationMethod>();
+        public string Title { get; set; }
+    }
+
+    public class NoteMetadata
+    {
+        public string Title { get; set; }
+        public long UserId { get; set; }
     }
 
     public class NewNoteDto
     {
         public long UserId { get; set; }
+        public string Title { get; set; }
         public string Content { get; set; }
         public DateTime DeletingDate { get; set; }
         public List<NotificationRequestDto> NotificationMethods { get; set; } = [];
@@ -37,6 +45,13 @@ namespace GoneSoon.Models
         Email,
         Sms,
         Push
+    }
+
+    public class Notification
+    {
+        public string Id { get; set; }
+        public long UserId { get; set; }
+        public string Content { get; set; }
     }
 
     public static class NoteExtensions
@@ -83,6 +98,7 @@ namespace GoneSoon.Models
             var newNoteModel = new Note
             {
                 UserId = newNote.UserId,
+                Title = newNote.Title,
                 Content = newNote.Content,
                 ExpireDate = newNote.DeletingDate,
                 NotificationMethodTypes = notificationMethods.Select(x => x.NotificationMethodType).ToHashSet()

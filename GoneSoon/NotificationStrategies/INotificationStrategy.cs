@@ -1,4 +1,5 @@
 ﻿using GoneSoon.Models;
+using System.Reflection;
 
 namespace GoneSoon.NotificationStrategies
 {
@@ -6,7 +7,9 @@ namespace GoneSoon.NotificationStrategies
     {
         public NotificationMethod NotificationMethod { get; }
 
-        public Task Notify(Note note);
+        bool CanNotify { get; }
+
+        public Task Notify(Notification notification);
     }
 
     public abstract class NotificationStrategyBase : INotificationStrategy
@@ -15,32 +18,36 @@ namespace GoneSoon.NotificationStrategies
 
         protected NotificationStrategyBase(ILogger logger)
         {
-            this._logger = logger;
+            _logger = logger;
         }
 
         public abstract NotificationMethod NotificationMethod { get; }
 
-        public async Task Notify(Note note)
+        public abstract bool CanNotify { get; }
+
+        public async Task Notify(Notification notification)
         {
             try
             {
-                await NotifyInternal(note);
-                _logger.LogInformation($"User {note.UserId} notified using {NotificationMethod}");
+                await NotifyInternal(notification);
+                _logger.LogInformation($"User {notification.UserId} notified using {NotificationMethod}");
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"Failed to notify user {note.UserId} using {NotificationMethod}");
+                _logger.LogError(ex, $"Failed to notify user {notification.UserId} using {NotificationMethod}");
             }
         }
 
-        protected abstract Task NotifyInternal(Note note);
+        protected abstract Task NotifyInternal(Notification notification);
     }
 
     public class EmailNotificationStrategy(ILogger logger) : NotificationStrategyBase(logger)
     {
         public override NotificationMethod NotificationMethod => NotificationMethod.Email;
 
-        protected override Task NotifyInternal(Note note)
+        public override bool CanNotify => true;
+
+        protected override Task NotifyInternal(Notification notification)
         {
             // Send email
             return Task.CompletedTask;
@@ -51,7 +58,9 @@ namespace GoneSoon.NotificationStrategies
     {
         public override NotificationMethod NotificationMethod => NotificationMethod.Sms;
 
-        protected override Task NotifyInternal(Note note)
+        public override bool CanNotify => true;
+
+        protected override Task NotifyInternal(Notification notification)
         {
             // Send SMS
             return Task.CompletedTask;
@@ -63,10 +72,44 @@ namespace GoneSoon.NotificationStrategies
     {
         public override NotificationMethod NotificationMethod => NotificationMethod.Push;
 
-        protected override Task NotifyInternal(Note note)
+        public override bool CanNotify => true;
+
+        protected override Task NotifyInternal(Notification notification)
         {
             // Send push notification
             return Task.CompletedTask;
+        }
+    }
+
+    public interface INotificationStrategyFactory
+    {
+        INotificationStrategy GetNotificationStrategy(NotificationMethod method);
+    }
+
+    public class NotificationStrategyFactory : INotificationStrategyFactory
+    {
+        Dictionary<NotificationMethod, INotificationStrategy> strategies;
+
+        public NotificationStrategyFactory(ILogger logger)
+        {
+            var strategyType = typeof(INotificationStrategy);
+            strategies = Assembly.GetExecutingAssembly()
+                                     .GetTypes()
+                                     .Where(t => strategyType.IsAssignableFrom(t) && !t.IsAbstract)
+                                     .Select(t => (INotificationStrategy)Activator.CreateInstance(t, logger))
+                                     .Where(s => s.CanNotify)
+                                     .ToDictionary(s => s.NotificationMethod);
+            if (!strategies.Any())
+            {
+                throw new InvalidOperationException("No notification strategies found");
+            }
+        }
+
+        public INotificationStrategy GetNotificationStrategy(NotificationMethod method)
+        {
+            return strategies.TryGetValue(method, out var strategy)
+                ? strategy
+                : throw new ArgumentException($"No strategy found for {method}");
         }
     }
 }

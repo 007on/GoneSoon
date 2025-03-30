@@ -8,6 +8,7 @@ namespace GoneSoon.Repositories
         Task UpdateNote(Note note);
         Task<Note> GetNote(Guid id);
         Task DeleteNote(Guid id);
+        Task<NoteMetadata> GetNoteMetadata(Guid id);
     }
 
 }

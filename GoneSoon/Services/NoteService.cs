@@ -20,7 +20,7 @@ namespace GoneSoon.Services
 
         public async Task UpdateNote(Note note)
         {
-            var existedNote = await _noteRepository.GetNote(note.Id)
+            _ = await _noteRepository.GetNote(note.Id)
                 ?? throw new ArgumentException("Note does not exist or was deleted.");
 
             await _noteRepository.UpdateNote(note);
