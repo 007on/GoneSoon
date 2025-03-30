@@ -2,5 +2,5 @@
 
 namespace GoneSoon.Handlers
 {
-    public record NoteExpiredNotification(Guid NoteId, string NoteTitle) : INotification;
+    public record NoteExpiredNotification(Guid NoteId) : INotification;
 }
