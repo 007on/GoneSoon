@@ -25,12 +25,12 @@ namespace GoneSoon.Controllers
             {
                 var createdNote = await _noteManager.CreateNewNote(note);
                 _logger.LogInformation("Note created successfully.");
-                return Ok(new { noteId = createdNote.Id });
+                return Ok(new { noteId = createdNote.Id, userId = createdNote.UserId });
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error creating note.");
-                return StatusCode(500, "Internal server error");
+                return StatusCode(500, ex.Message);
             }
         }
 
@@ -47,7 +47,7 @@ namespace GoneSoon.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error updating note with ID {NoteId}", note.Id);
-                return StatusCode(500, "Internal server error");
+                return StatusCode(500, ex.Message);
             }
         }
 
@@ -69,7 +69,7 @@ namespace GoneSoon.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error retrieving note with ID {NoteId}", id);
-                return StatusCode(500, "Internal server error");
+                return StatusCode(500, ex.Message);
             }
         }
 
@@ -80,13 +80,13 @@ namespace GoneSoon.Controllers
             try
             {
                 await _noteManager.DeleteNote(id);
-                _logger.LogInformation("Note with ID {NoteId} deleted successfully.");
+                _logger.LogInformation("Note with ID {NoteId} deleted successfully.", id);
                 return Ok();
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error deleting note with ID {NoteId}", id);
-                return StatusCode(500, "Internal server error");
+                return StatusCode(500, ex.Message);
             }
         }
     }

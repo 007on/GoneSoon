@@ -11,7 +11,7 @@ services:
       - sqlserver
     environment:
       - ConnectionStrings__Redis=redis:6379
-      - ConnectionStrings__SqlServer=Server=sqlserver;Database=GoneSoonDb;User=sa;Password=YourStrong!Passw0rd;
+      - ConnectionStrings__SqlServer=Server=sqlserver,1433;Database=GoneSoonDb;User Id=sa;Password=1qaSW2wsDE3edFR!;TrustServerCertificate=True;
     ports:
       - "5000:5000"
       - "5001:5001"
@@ -38,8 +38,8 @@ services:
     image: mcr.microsoft.com/mssql/server:2022-latest
     restart: always
     environment:
-      SA_PASSWORD: "YourStrong!Passw0rd"
-      ACCEPT_EULA: "Y"
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=1qaSW2wsDE3edFR!
     ports:
       - "1433:1433"
     volumes:

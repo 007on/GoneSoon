@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\GoneSoon\GoneSoonApi.csproj" />
+    <ProjectReference Include="..\GoneSoon\GoneSoon.csproj" />
   </ItemGroup>
 
 </Project>

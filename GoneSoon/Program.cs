@@ -5,34 +5,30 @@ using GoneSoon.Repositories;
 using GoneSoon.Services;
 using Microsoft.EntityFrameworkCore;
 using StackExchange.Redis;
+using System.Net;
 
 internal class Program
 {
-    private static void Main(string[] args)
+    private static async Task Main(string[] args)
     {
+        await Task.Delay(10000);
         var builder = WebApplication.CreateBuilder(args);
 
-        // Add services to the container.
-
         builder.Services.AddControllers();
-        // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
 
-        builder.Services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect("localhost"));
+        builder.Services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect("Redis"));
 
-        // Настройка DbContext
         builder.Services.AddDbContext<GoneSoonDbContext>(options =>
         {
-            string? connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-            options.UseSqlServer(connectionString);
+            options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
         });
 
 
         builder.Services.AddStackExchangeRedisCache(options =>
         {
-            IConfigurationSection configurationSection = builder.Configuration.GetSection("Redis:ConnectionString");
-            options.Configuration = configurationSection.Value;
+            options.Configuration = builder.Configuration.GetSection("Redis:ConnectionString").Value;
         });
 
         builder.Services.AddSingleton<INotificationStrategyFactory, NotificationStrategyFactory>();
@@ -46,22 +42,41 @@ internal class Program
         builder.Services.AddScoped<INotificationMethodService, NotificationMethodService>();
         builder.Services.AddScoped<INoteManager, NoteManager>();
         builder.Services.AddScoped<RedisKeyExpirationWatcher>();
-        //builder.Services.AddMediatR();
+        builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
+
+        builder.WebHost.ConfigureKestrel(options =>
+        {
+            options.Listen(IPAddress.Any, 5000);
+        });
+
 
         var app = builder.Build();
 
-        // Configure the HTTP request pipeline.
-        if (app.Environment.IsDevelopment())
-        {
-            app.UseSwagger();
-            app.UseSwaggerUI();
-        }
+        app.UseSwagger();
+        app.UseSwaggerUI();
 
         app.UseHttpsRedirection();
 
         app.UseAuthorization();
 
         app.MapControllers();
+
+        using (var scope = app.Services.CreateScope())
+        {
+            var services = scope.ServiceProvider;
+            try
+            {
+                var dbContext = services.GetRequiredService<GoneSoonDbContext>();
+                dbContext.Database.Migrate();
+                Console.WriteLine("✅ Migrations completed successfully.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"❌ Error running migrations: {ex.Message}");
+                throw;
+            }
+        }
+
 
         app.Run();
     }
