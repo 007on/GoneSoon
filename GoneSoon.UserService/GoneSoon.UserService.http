@@ -1,0 +1,6 @@
+@GoneSoon.UserService_HostAddress = http://localhost:5261
+
+GET {{GoneSoon.UserService_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
