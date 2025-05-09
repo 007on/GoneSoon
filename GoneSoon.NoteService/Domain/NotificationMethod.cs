@@ -1,4 +1,4 @@
-﻿namespace GoneSoon.UserService.Domain
+﻿namespace GoneSoon.NoteService.Domain
 {
     public abstract class NotificationMethodBase
     {
@@ -53,13 +53,5 @@
     public class PushNotificationMethod : NotificationMethodBase
     {
         public override NotificationMethod NotificationMethodType => NotificationMethod.Push;
-    }
-
-    public enum NotificationMethod
-    {
-        None = 0,
-        Email,
-        Sms,
-        Push
     }
 }

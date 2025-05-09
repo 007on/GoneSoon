@@ -1,18 +1,12 @@
-﻿using GoneSoon.Infrastructure.GoneSoon.Data;
-using GoneSoon.Models;
-using GoneSoon.Repositories;
+﻿using GoneSoon.NoteService.Domain;
+using GoneSoon.NoteService.Repositories;
 using Microsoft.EntityFrameworkCore;
 
-namespace GoneSoon.Infrastructure
+namespace GoneSoon.NoteService.Infrastructure
 {
-    public class NotificationMethodRepository : INotificationMethodRepository
+    public class NotificationMethodRepository(INotificationMethodDbContext context) : INotificationMethodRepository
     {
-        private readonly GoneSoonDbContext _context;
-
-        public NotificationMethodRepository(GoneSoonDbContext context)
-        {
-            _context = context;
-        }
+        private readonly INotificationMethodDbContext _context = context;
 
         public async Task<NotificationMethodBase> GetMethodByIdAsync(long methodId)
         {

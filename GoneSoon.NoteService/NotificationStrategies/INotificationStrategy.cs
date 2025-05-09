@@ -1,7 +1,7 @@
-﻿using GoneSoon.Models;
+﻿using GoneSoon.NoteService.Domain;
 using System.Reflection;
 
-namespace GoneSoon.NotificationStrategies
+namespace GoneSoon.NoteService.NotificationStrategies
 {
     public interface INotificationStrategy
     {

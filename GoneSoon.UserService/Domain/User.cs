@@ -11,7 +11,5 @@
         public string? OAuthProvider { get; set; }
 
         public string? OAuthSubjectId { get; set; }
-
-        public List<NotificationMethodBase> NotificationMethods { get; set; } = new();
     }
 }

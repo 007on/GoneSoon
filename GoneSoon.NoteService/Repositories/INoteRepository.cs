@@ -1,6 +1,6 @@
-﻿using GoneSoon.Models;
+﻿using GoneSoon.NoteService.Domain;
 
-namespace GoneSoon.Repositories
+namespace GoneSoon.NoteService.Repositories
 {
     public interface INoteRepository
     {
@@ -10,5 +10,4 @@ namespace GoneSoon.Repositories
         Task DeleteNote(Guid id);
         Task<NoteMetadata> GetNoteMetadata(Guid id);
     }
-
 }

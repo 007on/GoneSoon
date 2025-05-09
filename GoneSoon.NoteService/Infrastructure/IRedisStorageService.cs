@@ -1,6 +1,6 @@
-﻿using GoneSoon.Models;
+﻿using GoneSoon.NoteService.Domain;
 
-namespace GoneSoon.Infrastructure
+namespace GoneSoon.NoteService.Infrastructure
 {
     public static class RedisNoteRepositoryHelpers
     {
@@ -25,5 +25,14 @@ namespace GoneSoon.Infrastructure
         {
             return Guid.Parse(key.Substring(NotePrefix.Length));
         }
+    }
+
+    public interface IRedisStorageService
+    {
+        Task<bool> DeleteAsync(string key);
+        Task<string?> GetAsync(string key);
+        Task<IEnumerable<string>> GetKeysAsync(string pattern);
+        Task<TimeSpan?> GetTtlAsync(string key);
+        Task SetAsync(string key, string value, TimeSpan? expiry = null);
     }
 }

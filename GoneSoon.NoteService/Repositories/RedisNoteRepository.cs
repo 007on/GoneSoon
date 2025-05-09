@@ -1,8 +1,8 @@
-﻿using GoneSoon.Models;
-using GoneSoon.Repositories;
+﻿using GoneSoon.NoteService.Domain;
+using GoneSoon.NoteService.Infrastructure;
 using System.Text.Json;
 
-namespace GoneSoon.Infrastructure
+namespace GoneSoon.NoteService.Repositories
 {
     public class RedisNoteRepository : INoteRepository
     {
