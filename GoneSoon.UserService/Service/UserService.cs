@@ -8,17 +8,11 @@ namespace GoneSoon.UserService.Service
     {
         Task<UserDto> FindOrCreateAsync(CreateUserRequest request);
         Task<UserDto?> GetByIdAsync(long id);
-        //Task<List<UserDto>> GetAllAsync();
     }
 
-    public class UserService : IUserService
+    public class UserService(UserDbContext context) : IUserService
     {
-        private readonly UserDbContext _context;
-
-        public UserService(UserDbContext context)
-        {
-            _context = context;
-        }
+        private readonly UserDbContext _context = context;
 
         public async Task<UserDto> FindOrCreateAsync(CreateUserRequest request)
         {
@@ -33,11 +27,5 @@ namespace GoneSoon.UserService.Service
             var user = await _context.Users.FindAsync(id);
             return user?.ToDto();
         }
-
-        //public async Task<List<UserDto>> GetAllAsync()
-        //{
-        //    var users = await _context.Users.ToListAsync();
-        //    return users.Select(u => u.ToDto()).ToList();
-        //}
     }
 }

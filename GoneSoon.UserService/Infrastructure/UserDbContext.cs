@@ -12,10 +12,7 @@ namespace GoneSoon.UserService.Infrastructure
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<User>()
-                .HasMany(u => u.NotificationMethods)
-                .WithOne()
-                .HasForeignKey(n => n.Id);
+            modelBuilder.Entity<User>();
         }
     }
 }
