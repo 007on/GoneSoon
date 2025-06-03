@@ -1,4 +1,6 @@
-﻿namespace GoneSoon.NoteService.Domain
+﻿using GoneSoon.InteractionProtocol;
+
+namespace GoneSoon.NoteService.Domain
 {
     public abstract class NotificationMethodBase
     {

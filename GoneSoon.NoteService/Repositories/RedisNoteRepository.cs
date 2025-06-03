@@ -1,4 +1,5 @@
-﻿using GoneSoon.NoteService.Domain;
+﻿using GoneSoon.InteractionProtocol;
+using GoneSoon.NoteService.Domain;
 using GoneSoon.NoteService.Infrastructure;
 using System.Text.Json;
 

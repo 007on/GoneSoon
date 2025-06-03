@@ -13,4 +13,8 @@
     <PackageReference Include="StackExchange.Redis" Version="2.8.37" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\GoneSoon.InteractionProtocol\GoneSoon.InteractionProtocol.csproj" />
+  </ItemGroup>
+
 </Project>

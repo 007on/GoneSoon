@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoneSoon.UserService", "Gon
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoneSoon.NoteService", "GoneSoon.NoteService\GoneSoon.NoteService.csproj", "{4EF61437-0ED7-42E8-9F37-460C3939EF25}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoneSoon.InteractionProtocol", "GoneSoon.InteractionProtocol\GoneSoon.InteractionProtocol.csproj", "{28814C9F-42B1-4D9D-993F-1A59FD9D1DEE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -75,6 +77,18 @@ Global
 		{4EF61437-0ED7-42E8-9F37-460C3939EF25}.Release|x64.Build.0 = Release|Any CPU
 		{4EF61437-0ED7-42E8-9F37-460C3939EF25}.Release|x86.ActiveCfg = Release|Any CPU
 		{4EF61437-0ED7-42E8-9F37-460C3939EF25}.Release|x86.Build.0 = Release|Any CPU
+		{28814C9F-42B1-4D9D-993F-1A59FD9D1DEE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{28814C9F-42B1-4D9D-993F-1A59FD9D1DEE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{28814C9F-42B1-4D9D-993F-1A59FD9D1DEE}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{28814C9F-42B1-4D9D-993F-1A59FD9D1DEE}.Debug|x64.Build.0 = Debug|Any CPU
+		{28814C9F-42B1-4D9D-993F-1A59FD9D1DEE}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{28814C9F-42B1-4D9D-993F-1A59FD9D1DEE}.Debug|x86.Build.0 = Debug|Any CPU
+		{28814C9F-42B1-4D9D-993F-1A59FD9D1DEE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{28814C9F-42B1-4D9D-993F-1A59FD9D1DEE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{28814C9F-42B1-4D9D-993F-1A59FD9D1DEE}.Release|x64.ActiveCfg = Release|Any CPU
+		{28814C9F-42B1-4D9D-993F-1A59FD9D1DEE}.Release|x64.Build.0 = Release|Any CPU
+		{28814C9F-42B1-4D9D-993F-1A59FD9D1DEE}.Release|x86.ActiveCfg = Release|Any CPU
+		{28814C9F-42B1-4D9D-993F-1A59FD9D1DEE}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,4 +1,5 @@
-﻿using GoneSoon.NoteService.Domain;
+﻿using GoneSoon.InteractionProtocol;
+using GoneSoon.NoteService.Domain;
 
 namespace GoneSoon.NoteService.Repositories
 {

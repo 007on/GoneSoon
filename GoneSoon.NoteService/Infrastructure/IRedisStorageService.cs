@@ -1,4 +1,4 @@
-﻿using GoneSoon.NoteService.Domain;
+﻿using GoneSoon.InteractionProtocol;
 
 namespace GoneSoon.NoteService.Infrastructure
 {

@@ -8,7 +8,8 @@ namespace GoneSoon.NoteService.Handlers
     public class NoteExpiredNotificationHandler(
         INotificationMethodRepository notificationMethodService, 
         INotificationStrategyFactory notificationStrategyFactory, 
-        INoteRepository noteRepository) : MediatorRequestHandler<NoteExpiredNotification>
+        INoteRepository noteRepository) 
+            : MediatorRequestHandler<NoteExpiredNotification>
     {
         private readonly INotificationMethodRepository _notificationMethodRepository = notificationMethodService;
         private readonly INotificationStrategyFactory _notificationStrategyFactory = notificationStrategyFactory;
