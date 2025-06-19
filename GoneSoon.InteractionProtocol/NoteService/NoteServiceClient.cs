@@ -18,7 +18,7 @@ namespace GoneSoon.InteractionProtocol.Services
 
         public async Task<Note> CreateNoteAsync(NewNoteDto note)
         {
-            var response = await _httpClient.PostAsJsonAsync("api/notes", note); // This method is part of System.Net.Http.Json namespace
+            var response = await _httpClient.PostAsJsonAsync("api/notes", note);
             response.EnsureSuccessStatusCode();
             return await response.Content.ReadFromJsonAsync<Note>();
         }

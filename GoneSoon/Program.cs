@@ -18,28 +18,21 @@ internal class Program
 
         builder.Services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect("Redis"));
 
-        //builder.Services.AddDbContext<GoneSoonDbContext>(options =>
-        //{
-        //    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
-        //});
-
+        builder.Services.AddHttpClient<UserServiceClient>(client =>
+        {
+            client.BaseAddress = new Uri(builder.Configuration["UserService:BaseUrl"]);
+        });
+        builder.Services.AddHttpClient<NoteServiceClient>(client =>
+        {
+            client.BaseAddress = new Uri(builder.Configuration["NoteService:BaseUrl"]);
+        });
 
         builder.Services.AddStackExchangeRedisCache(options =>
         {
             options.Configuration = builder.Configuration.GetSection("Redis:ConnectionString").Value;
         });
 
-        //builder.Services.AddSingleton<INotificationStrategyFactory, NotificationStrategyFactory>();
-
-        //builder.Services.AddScoped<IRedisStorageService, RedisStorageService>();
-        //builder.Services.AddScoped<INoteRepository, RedisNoteRepository>();
-        //builder.Services.AddScoped<IUserRepository, UserRepository>();
-        //builder.Services.AddScoped<INotificationMethodRepository, NotificationMethodRepository>();
-        //builder.Services.AddScoped<INoteService, NoteService>();
-        //builder.Services.AddScoped<IUserService, UserService>();
-        //builder.Services.AddScoped<INotificationMethodService, NotificationMethodService>();
         builder.Services.AddScoped<INoteManager, NoteManager>();
-        //builder.Services.AddScoped<RedisKeyExpirationWatcher>();
         builder.Services.AddScoped<INoteServiceClient, NoteServiceClient>();
         builder.Services.AddScoped<IUserServiceClient, UserServiceClient>();
         builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));

@@ -1,6 +1,3 @@
 @GoneSoon.NoteService_HostAddress = http://localhost:5235
 
-GET {{GoneSoon.NoteService_HostAddress}}/weatherforecast/
-Accept: application/json
-
 ###
