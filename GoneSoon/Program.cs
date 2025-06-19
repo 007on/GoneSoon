@@ -1,7 +1,5 @@
-﻿using GoneSoon.Infrastructure;
-using GoneSoon.Infrastructure.GoneSoon.Data;
-using GoneSoon.NotificationStrategies;
-using GoneSoon.Repositories;
+﻿using GoneSoon.InteractionProtocol.Services;
+using GoneSoon.InteractionProtocol.UserService;
 using GoneSoon.Services;
 using Microsoft.EntityFrameworkCore;
 using StackExchange.Redis;
@@ -20,10 +18,10 @@ internal class Program
 
         builder.Services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect("Redis"));
 
-        builder.Services.AddDbContext<GoneSoonDbContext>(options =>
-        {
-            options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
-        });
+        //builder.Services.AddDbContext<GoneSoonDbContext>(options =>
+        //{
+        //    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+        //});
 
 
         builder.Services.AddStackExchangeRedisCache(options =>
@@ -31,17 +29,19 @@ internal class Program
             options.Configuration = builder.Configuration.GetSection("Redis:ConnectionString").Value;
         });
 
-        builder.Services.AddSingleton<INotificationStrategyFactory, NotificationStrategyFactory>();
+        //builder.Services.AddSingleton<INotificationStrategyFactory, NotificationStrategyFactory>();
 
-        builder.Services.AddScoped<IRedisStorageService, RedisStorageService>();
-        builder.Services.AddScoped<INoteRepository, RedisNoteRepository>();
-        builder.Services.AddScoped<IUserRepository, UserRepository>();
-        builder.Services.AddScoped<INotificationMethodRepository, NotificationMethodRepository>();
-        builder.Services.AddScoped<INoteService, NoteService>();
-        builder.Services.AddScoped<IUserService, UserService>();
-        builder.Services.AddScoped<INotificationMethodService, NotificationMethodService>();
+        //builder.Services.AddScoped<IRedisStorageService, RedisStorageService>();
+        //builder.Services.AddScoped<INoteRepository, RedisNoteRepository>();
+        //builder.Services.AddScoped<IUserRepository, UserRepository>();
+        //builder.Services.AddScoped<INotificationMethodRepository, NotificationMethodRepository>();
+        //builder.Services.AddScoped<INoteService, NoteService>();
+        //builder.Services.AddScoped<IUserService, UserService>();
+        //builder.Services.AddScoped<INotificationMethodService, NotificationMethodService>();
         builder.Services.AddScoped<INoteManager, NoteManager>();
-        builder.Services.AddScoped<RedisKeyExpirationWatcher>();
+        //builder.Services.AddScoped<RedisKeyExpirationWatcher>();
+        builder.Services.AddScoped<INoteServiceClient, NoteServiceClient>();
+        builder.Services.AddScoped<IUserServiceClient, UserServiceClient>();
         builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
 
         builder.WebHost.ConfigureKestrel(options =>
@@ -60,23 +60,6 @@ internal class Program
         app.UseAuthorization();
 
         app.MapControllers();
-
-        using (var scope = app.Services.CreateScope())
-        {
-            var services = scope.ServiceProvider;
-            try
-            {
-                var dbContext = services.GetRequiredService<GoneSoonDbContext>();
-                dbContext.Database.Migrate();
-                Console.WriteLine("✅ Migrations completed successfully.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"❌ Error running migrations: {ex.Message}");
-                throw;
-            }
-        }
-
 
         app.Run();
     }

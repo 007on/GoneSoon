@@ -1,4 +1,4 @@
-using GoneSoon.Models;
+using GoneSoon.InteractionProtocol.NoteService.Data;
 using GoneSoon.Services;
 using Microsoft.AspNetCore.Mvc;
 

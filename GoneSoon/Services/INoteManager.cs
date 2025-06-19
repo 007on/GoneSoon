@@ -1,4 +1,4 @@
-﻿using GoneSoon.Models;
+﻿using GoneSoon.InteractionProtocol.NoteService.Data;
 
 namespace GoneSoon.Services
 {
@@ -6,7 +6,7 @@ namespace GoneSoon.Services
     {
         Task<Note> CreateNewNote(NewNoteDto newNote);
         Task DeleteNote(Guid noteId);
-        Task UpdateNote(Note note);
         Task<Note> GetNote(Guid noteId);
+        Task UpdateNote(Note note);
     }
 }

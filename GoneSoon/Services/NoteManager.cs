@@ -1,66 +1,46 @@
-﻿using GoneSoon.Models;
+﻿using GoneSoon.InteractionProtocol.NoteService.Data;
+using GoneSoon.InteractionProtocol.Services;
+using GoneSoon.InteractionProtocol.UserService;
 
 namespace GoneSoon.Services
 {
     public class NoteManager : INoteManager
     {
-        private readonly INoteService _noteService;
-        private readonly IUserService _userService;
-        private readonly INotificationMethodService _notificationMethodService;
+        private readonly IUserServiceClient _userServiceClient;
+        private readonly INoteServiceClient _noteServiceClient;
 
-        public NoteManager(INoteService noteService, IUserService userService, INotificationMethodService notificationMethodService)
+        public NoteManager(INoteServiceClient noteServiceClient, IUserServiceClient userServiceClient)
         {
-            _noteService = noteService;
-            _userService = userService;
-            _notificationMethodService = notificationMethodService;
+            _userServiceClient = userServiceClient;
+            _noteServiceClient = noteServiceClient;
         }
 
         public async Task<Note> CreateNewNote(NewNoteDto newNote)
         {
-            newNote.ValidateNewNote();
             if (newNote.UserId == 0)
             {
-                var user = await _userService.CreateUser();
-                newNote.UserId = user.Id;
+                //var user = await _userServiceClient.CreateUserAsync();
+                //newNote.UserId = user.Id;
             }
 
-            (var newNoteModel, var notificationMethods) = newNote.Parse();
-            if (notificationMethods.All(x => x.NotificationMethodType == NotificationMethod.None))
-            {
-                throw new ArgumentException("At least one notification method should be specified");
-            }
-
-            var note = await _noteService.CreateNewNoteAsync(newNoteModel);
-            notificationMethods.ForEach(x => x.NoteId = note.Id);
-
-            await _notificationMethodService.SaveNotificationMethods(
-                [.. notificationMethods.Where(x => x.NotificationMethodType != NotificationMethod.None)]);
+            var note = await _noteServiceClient.CreateNoteAsync(newNote);
 
             return note;
         }
 
         public async Task UpdateNote(Note note)
         {
-            var existedNote = await _noteService.GetNoteById(note.Id)
-                ?? throw new ArgumentException("Note does not exist or was deleted.");
-
-            note.ValidateNote();
-
-            existedNote.Content = note.Content;
-            existedNote.ExpireDate = note.ExpireDate;
-            existedNote.NotificationMethodTypes = note.NotificationMethodTypes;
-
-            await _noteService.UpdateNote(existedNote);
+            await _noteServiceClient.UpdateNoteAsync(note);
         }
 
         public async Task<Note> GetNote(Guid noteId)
         {
-            return await _noteService.GetNoteById(noteId);
+            return await _noteServiceClient.GetNoteAsync(noteId);
         }
 
         public async Task DeleteNote(Guid noteId)
         {
-            await _noteService.DeleteNote(noteId);
+            await _noteServiceClient.DeleteNoteAsync(noteId);
         }
     }
 }
