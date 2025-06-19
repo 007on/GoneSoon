@@ -1,5 +1,5 @@
-﻿using GoneSoon.UserService.Domain;
-using GoneSoon.UserService.Dto;
+﻿using GoneSoon.InteractionProtocol.UserService.Data;
+using GoneSoon.UserService.Domain;
 
 namespace GoneSoon.UserService.Mapping
 {

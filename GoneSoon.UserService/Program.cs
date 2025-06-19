@@ -1,6 +1,8 @@
+﻿using GoneSoon.UserService.Infrastructure;
 using GoneSoon.UserService.Service;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +22,12 @@ builder.Services.AddAuthentication(options =>
         googleOptions.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
     });
 
+
+builder.Services.AddDbContext<UserDbContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -29,5 +37,21 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    try
+    {
+        var dbContext = services.GetRequiredService<UserDbContext>();
+        dbContext.Database.Migrate();
+        Console.WriteLine("✅ Migrations completed successfully.");
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"❌ Error running migrations: {ex.Message}");
+        throw;
+    }
+}
 
 app.Run();

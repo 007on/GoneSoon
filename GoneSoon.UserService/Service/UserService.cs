@@ -1,4 +1,4 @@
-﻿using GoneSoon.UserService.Dto;
+﻿using GoneSoon.InteractionProtocol.UserService.Data;
 using GoneSoon.UserService.Infrastructure;
 using GoneSoon.UserService.Mapping;
 
