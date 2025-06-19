@@ -1,4 +1,5 @@
-﻿using GoneSoon.NoteService.Domain;
+﻿using GoneSoon.InteractionProtocol.NoteService.Data;
+using GoneSoon.NoteService.Domain;
 using Microsoft.EntityFrameworkCore;
 
 namespace GoneSoon.NoteService.Infrastructure;
