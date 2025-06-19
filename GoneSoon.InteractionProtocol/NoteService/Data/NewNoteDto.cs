@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace GoneSoon.InteractionProtocol
+namespace GoneSoon.InteractionProtocol.NoteService.Data
 {
     public class NewNoteDto
     {

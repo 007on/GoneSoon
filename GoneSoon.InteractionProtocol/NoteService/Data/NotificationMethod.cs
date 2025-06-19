@@ -1,4 +1,4 @@
-﻿namespace GoneSoon.InteractionProtocol
+﻿namespace GoneSoon.InteractionProtocol.NoteService.Data
 {
     public enum NotificationMethod
     {

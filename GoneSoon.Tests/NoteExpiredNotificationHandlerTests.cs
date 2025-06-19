@@ -1,26 +1,26 @@
-﻿using GoneSoon.Handlers;
-using GoneSoon.Models;
-using GoneSoon.NotificationStrategies;
-using GoneSoon.Repositories;
-using GoneSoon.Services;
+﻿using GoneSoon.InteractionProtocol.NoteService.Data;
+using GoneSoon.NoteService.Domain;
+using GoneSoon.NoteService.Handlers;
+using GoneSoon.NoteService.NotificationStrategies;
+using GoneSoon.NoteService.Repositories;
 using Moq;
 
 namespace GoneSoon.Tests
 {
     public class NoteExpiredNotificationHandlerTests
     {
-        private readonly Mock<INotificationMethodService> _mockNotificationMethodService;
+        private readonly Mock<INotificationMethodRepository> _mockNotificationMethodRepository;
         private readonly Mock<INotificationStrategyFactory> _mockNotificationStrategyFactory;
         private readonly Mock<INoteRepository> _mockNoteRepository;
-        private readonly NoteExpiredNotificationHandler _handler;
+        private readonly TestableNoteExpiredNotificationHandler _handler;
 
         public NoteExpiredNotificationHandlerTests()
         {
-            _mockNotificationMethodService = new Mock<INotificationMethodService>();
+            _mockNotificationMethodRepository = new Mock<INotificationMethodRepository>();
             _mockNotificationStrategyFactory = new Mock<INotificationStrategyFactory>();
             _mockNoteRepository = new Mock<INoteRepository>();
-            _handler = new NoteExpiredNotificationHandler(
-                _mockNotificationMethodService.Object,
+            _handler = new TestableNoteExpiredNotificationHandler(
+                _mockNotificationMethodRepository.Object,
                 _mockNotificationStrategyFactory.Object,
                 _mockNoteRepository.Object);
         }
@@ -33,7 +33,7 @@ namespace GoneSoon.Tests
             var notificationMethods = new List<NotificationMethodBase> { new EmailNotificationMethod() };
             var noteMetadata = new NoteMetadata { Title = "Test Note", UserId = 1 };
 
-            _mockNotificationMethodService.Setup(s => s.GetNotificationMethods(noteId)).ReturnsAsync(notificationMethods);
+            _mockNotificationMethodRepository.Setup(s => s.GetNotificationMethods(noteId)).ReturnsAsync(notificationMethods);
             _mockNoteRepository.Setup(r => r.GetNoteMetadata(noteId)).ReturnsAsync(noteMetadata);
             var mockStrategy = new Mock<INotificationStrategy>();
             _mockNotificationStrategyFactory.Setup(f => f.GetNotificationStrategy(NotificationMethod.Email)).Returns(mockStrategy.Object);
@@ -51,7 +51,7 @@ namespace GoneSoon.Tests
             var notificationMethods = new List<NotificationMethodBase>();
             var noteMetadata = new NoteMetadata { Title = "Test Note", UserId = 1 };
 
-            _mockNotificationMethodService.Setup(s => s.GetNotificationMethods(noteId)).ReturnsAsync(notificationMethods);
+            _mockNotificationMethodRepository.Setup(s => s.GetNotificationMethods(noteId)).ReturnsAsync(notificationMethods);
             _mockNoteRepository.Setup(r => r.GetNoteMetadata(noteId)).ReturnsAsync(noteMetadata);
 
             await _handler.Handle(notification, CancellationToken.None);

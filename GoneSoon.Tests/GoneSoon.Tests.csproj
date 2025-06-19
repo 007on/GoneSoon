@@ -20,6 +20,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\GoneSoon.NoteService\GoneSoon.NoteService.csproj" />
+    <ProjectReference Include="..\GoneSoon.UserService\GoneSoon.UserService.csproj" />
     <ProjectReference Include="..\GoneSoon\GoneSoon.csproj" />
   </ItemGroup>
 

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace GoneSoon.InteractionProtocol
+namespace GoneSoon.InteractionProtocol.NoteService.Data
 {
     public class NotificationRequestDto
     {
